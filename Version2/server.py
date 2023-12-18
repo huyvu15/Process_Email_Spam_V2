@@ -172,7 +172,7 @@ class GmailApp:
             avatar_path = self.get_random_avatar_path()
             avatar_image = self.load_avatar_image(avatar_path)
 
-            if not is_spam:
+            if is_spam:
                 self.ham_messages.append((sender, subject, date, body_text, avatar_image))
                 # break
                 self.ham_listbox.insert(tk.END, f"{self.message_index}. {sender} - {subject}")
