@@ -6,6 +6,9 @@ import random
 import pandas as pd 
 import os
 from NaiveBayes import NaiveBayes 
+import tkinter.filedialog 
+import json 
+
 
 class GmailApp:
     def __init__(self):
@@ -23,7 +26,7 @@ class GmailApp:
 
         self.create_gui()
 
-        self.load_messages_from_database()
+        # self.load_messages_from_json()
         self.train_spam_classifier()
 
     def create_gui(self):
@@ -83,6 +86,11 @@ class GmailApp:
 
         email_frame.columnconfigure(0, weight=1)
         email_frame.rowconfigure(1, weight=1)
+        
+        # Thêm nút chọn tệp JSON
+        select_json_button = ttk.Button(inbox_frame, text="Select JSON File", command=self.load_messages_from_json)
+        select_json_button.grid(row=3, column=0, pady=10, sticky="w")
+
     
     def train_spam_classifier(self):
         sms_spam = pd.read_csv('SMSSpamCollection', sep='\t', header=None, names=['Label', 'SMS'])
@@ -147,56 +155,45 @@ class GmailApp:
 
         self.display_email(selected_message)
 
+    def load_messages_from_json(self):
+        # Hiển thị hộp thoại chọn tệp
+        file_path = tkinter.filedialog.askopenfilename(filetypes=[("JSON Files", "*.json")])
 
-    def load_messages_from_database(self):
-        # Kết nối đến MongoDB
-        client = MongoClient('mongodb://localhost:27017/')
-        db = client['email']  
-        email_collection = db['email']
+        # Kiểm tra nếu người dùng đã chọn một tệp
+        if file_path:
+            # Xóa dữ liệu hiện tại
+            self.ham_messages.clear()
+            self.spam_messages.clear()
+            self.ham_listbox.delete(0, tk.END)
+            self.spam_listbox.delete(0, tk.END)
+            self.message_index = 1
 
-        # Tải tin nhắn từ cơ sở dữ liệu
-        messages = email_collection.find()
-        for message in messages:
-            sender = message.get('sender', 'Unknown Sender')
-            subject = message.get('subject', 'No Subject')
-            date = message.get('date', 'Unknown Date')
-            body_text = message.get('body_text', 'No Body Text')
-            
-            # cập nhập lại mô hình trước khi dự đoạn
-            self.train_spam_classifier()
-            is_spam = self.spam_classifier.classify(body_text)
-            # print(body_text)
-            print(is_spam)
+            # Đọc dữ liệu từ tệp JSON và dự đoán
+            with open(file_path, 'r', encoding='utf-8') as json_file:
+                messages_data = json.load(json_file)
 
-            
-            avatar_path = self.get_random_avatar_path()
-            avatar_image = self.load_avatar_image(avatar_path)
+            for message_data in messages_data:
+                sender = message_data.get('sender', 'Unknown Sender')
+                subject = message_data.get('subject', 'No Subject')
+                date = message_data.get('date', 'Unknown Date')
+                body_text = message_data.get('body_text', 'No Body Text')
 
-            if not is_spam:
-                self.ham_messages.append((sender, subject, date, body_text, avatar_image))
-                # break
-                self.ham_listbox.insert(tk.END, f"{self.message_index}. {sender} - {subject}")
-            else:
-                self.spam_messages.append((sender, subject, date, body_text, avatar_image))
-                # print(self.spam_messages)
-                
-                self.spam_listbox.insert(tk.END, f"{self.message_index}. {sender} - {subject}")
+                # Cập nhật mô hình trước khi dự đoán
+                # self.train_spam_classifier()
+                is_spam = self.spam_classifier.classify(body_text)
 
-            self.message_index += 1
+                avatar_path = self.get_random_avatar_path()
+                avatar_image = self.load_avatar_image(avatar_path)
 
-    # def display_selected_message(self, event):
-    #     selected_ham_index = self.ham_listbox.curselection()
-    #     selected_spam_index = self.spam_listbox.curselection()
+                if not is_spam:
+                    self.ham_messages.append((sender, subject, date, body_text, avatar_image))
+                    self.ham_listbox.insert(tk.END, f"{self.message_index}. {sender} - {subject}")
+                else:
+                    self.spam_messages.append((sender, subject, date, body_text, avatar_image))
+                    self.spam_listbox.insert(tk.END, f"{self.message_index}. {sender} - {subject}")
 
-    #     if selected_ham_index:
-    #         selected_index = int(selected_ham_index[0])
-    #         selected_message = self.ham_messages[selected_index]
-    #     elif selected_spam_index:
-    #         selected_index = int(selected_spam_index[0])
-    #         selected_message = self.spam_messages[selected_index]
-    #     else:
-    #         return
-    #     self.display_email(selected_message)
+                self.message_index += 1
+
     
     def delete_selected_message(self, inbox_type):
         selected_ham_index = self.ham_listbox.curselection()

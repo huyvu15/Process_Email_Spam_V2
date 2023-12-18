@@ -87,20 +87,37 @@ if __name__ == "__main__":
     spam_classifier.train(training_set)
 
     mess = """
----      | |  ![Google](  Số điện thoại đã được thêm cho tính năng Xác minh 2 bước  | ![]( DJikGRxIjThIz5y4UBgVtCI4Bg=s96-c)| anhhungbanphim57@gmail.com   ---|---      Từ nay trở đi, hệ thống sẽ gửi mã dùng để đăng nhập vào tài khoản của bạn đến số điện thoại mới. Nếu bạn không phải là người thêm số điện thoại này thì có thể ai đó đang sử dụng tài khoản của bạn. Hãy kiểm tra và bảo mật tài khoản của bạn ngay bây giờ.  [Kiểm tra hoạt động](  Bạn cũng có thể xem hoạt động bảo mật tại     Chúng tôi gửi email này để thông báo cho bạn biết về những thay đổi quan trọng đối với Tài khoản Google và dịch vụ của bạn.  (C) 2023 Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA  
+WorldQuant BRAIN Việt Nam hân hạnh được tổ chức buổi gặp gỡ tháng 12/2023 dành riêng cho các bạn BRAIN consultant onboard trong năm 2023!
+
+Do số lượng chỗ ngồi giới hạn, các bạn hãy nhanh chóng đăng ký ngay nào!
+Đăng ký tham dự tại đây
+Chương trình sự kiện
+Cơ hội gặp gỡ các thành viên khác của cộng đồng BRAIN cũng như các WorldQuant researcher.
+Cập nhật thêm nhiều sáng kiến mới
+Cơ hội học tập thực tiễn với các phần nội dung được hướng dẫn bởi WorldQuant researcher
+Mini-game với cơ hội nhận được các phần quà hấp dẫn
+Tham quan văn phòng WorldQuant và dùng bữa trưa
+
+ Tại Hà Nội
+Ngày & Giờ: Thứ Bảy, ngày 23/12/2023, vào lúc 09:00 sáng – 12:00 trưa
+Địa điểm: Văn phòng WorldQuant tại tòa nhà Lotte Tower, Quận Ba Đình
+
+ Tại Thành phố Hồ Chí Minh
+Ngày & Giờ: Thứ Bảy ngày 16/12/2023, vào lúc 09:00 sáng – 12:00 trưa
+Địa điểm: Văn phòng WorldQuant tại tòa nhà Saigon Centre, Quận 1
+
+Nếu bạn có bất kỳ câu hỏi nào, vui lòng gửi về địa chỉ email: vietnam@worldquantbrain.com
+
+Rất mong sẽ được tiếp đón bạn.
+
+Trân trọng,
+WorldQuant BRAIN Việt Nam
+
  """
  
-    mess1 = """
-   Đây là tin nhắn thông thường
-    """
-    
-    mess3 = """
-    
-     """
-    
-    # mess1 = 
+    mess1 = "Đây là tin nhắn spam, cực spam dùng để test spam, spam, spam spam, spam chúa tể spam đây!"
 
-    result = spam_classifier.classify(mess)
+    result = spam_classifier.classify(mess1)
     if result:
         print("Ham")
     else:
