@@ -183,20 +183,6 @@ class GmailApp:
                 self.spam_listbox.insert(tk.END, f"{self.message_index}. {sender} - {subject}")
 
             self.message_index += 1
-
-    # def display_selected_message(self, event):
-    #     selected_ham_index = self.ham_listbox.curselection()
-    #     selected_spam_index = self.spam_listbox.curselection()
-
-    #     if selected_ham_index:
-    #         selected_index = int(selected_ham_index[0])
-    #         selected_message = self.ham_messages[selected_index]
-    #     elif selected_spam_index:
-    #         selected_index = int(selected_spam_index[0])
-    #         selected_message = self.spam_messages[selected_index]
-    #     else:
-    #         return
-    #     self.display_email(selected_message)
     
     def delete_selected_message(self, inbox_type):
         selected_ham_index = self.ham_listbox.curselection()
